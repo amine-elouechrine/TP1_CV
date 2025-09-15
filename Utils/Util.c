@@ -314,5 +314,51 @@ ppm_file read_ppm(char *filename) {
 }
 
 void write_ppm(ppm_file image, char *filename) {
-    pm_error("PLEASE IMPLEMENT");
+  
+  FILE *ofp;
+  int is_raw, i, j;
+
+  /* Opening output file */
+  ofp = fopen(filename, "w");
+  if (ofp == NULL) {
+    printf("error in opening file %s\n", filename);
+    pm_error(" FILE OPEN ERROR");
+  }
+
+  if (image.magic_number == '3') {
+    is_raw = 0;
+  } else {
+    is_raw = 1;
+  }
+
+  if (is_raw) {
+    fprintf(ofp, "P6\n");
+  } else {
+    fprintf(ofp, "P3\n");
+  }
+
+  fprintf(ofp, "%d %d \n", image.cols, image.rows);
+  fprintf(ofp, "%d\n", image.maxval);
+
+  for (i = 0; i < image.rows; i++)
+    for (j = 0; j < image.cols; j++)
+      if (is_raw){
+              fprintf(ofp, "%c", image.pixmap[i * image.cols + j].red);
+              fprintf(ofp, "%c", image.pixmap[i * image.cols + j].green);
+              fprintf(ofp, "%c", image.pixmap[i * image.cols + j].blue);
+
+
+
+      }
+
+          
+      else{
+        fprintf(ofp, "%d ", image.pixmap[i * image.cols + j].red);
+        fprintf(ofp, "%d ", image.pixmap[i * image.cols + j].green);
+        fprintf(ofp, "%d ", image.pixmap[i * image.cols + j].blue);
+        
+        }
+
+  /* Closing output file */
+  fclose(ofp);
 }
